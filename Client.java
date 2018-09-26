@@ -28,20 +28,13 @@ public class Client {
 	public Result run() {
 		System.out.println(String.format("sid=%d num=%d", sid, num));
 		final Object mu = new Object();
-		Fiber.execute(() -> {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-			}
-			synchronized (mu) {
-				closed = true;
-			}
-		});
+
 		for (int i = 0; i < num; i++) {
 			final int rid = i;
 			Fiber.execute(() -> {
 				try {
 					Result r = get(rid);
+					System.out.println(String.format("complete rid=%d", rid));
 					synchronized (mu) {
 						put(r);
 					}
@@ -50,12 +43,16 @@ public class Client {
 				}
 			});
 		}
-		while (!closed) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-			}
+
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
 		}
+		System.out.println("closed");
+		synchronized (mu) {
+			closed = true;
+		}
+
 		return top;
 	}
 
