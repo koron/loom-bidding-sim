@@ -1,0 +1,8 @@
+[package]
+
+name = "bidding_client"
+version = "0.0.1"
+authors = [ "Taro MURAOKA <koron.kaoriya@gmail.com>" ]
+
+[dependencies]
+rand = "0.3.0"
